@@ -1,0 +1,72 @@
+#include <BLEDevice.h>
+#include <BLEServer.h>
+#include <BLEUtils.h>
+#include <BLE2902.h>
+
+#define SERVICE_UUID "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+
+BLEServer* pServer = NULL;
+BLECharacteristic* pCharacteristic = NULL;
+bool deviceConnected = false;
+
+class MyServerCallbacks : public BLEServerCallbacks {
+    void onConnect(BLEServer* pServer) {
+      deviceConnected = true;
+      Serial.println("Device connected");
+    }
+
+    void onDisconnect(BLEServer* pServer) {
+      deviceConnected = false;
+      Serial.println("Device disconnected");
+    }
+};
+
+class MyCharacteristicCallbacks : public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic *pCharacteristic) {
+      std::string value = pCharacteristic->getValue();
+      if (value.length() > 0) {
+        Serial.println("*********");
+        Serial.print("Received Value: ");
+        for (int i = 0; i < value.length(); i++)
+          Serial.print(value[i]);
+        Serial.println();
+        Serial.println("*********");
+      }
+    }
+};
+
+void setup() {
+  Serial.begin(115200);
+  Serial.println("Starting BLE server");
+
+  BLEDevice::init("ESP32 BLE Server");
+  pServer = BLEDevice::createServer();
+  pServer->setCallbacks(new MyServerCallbacks());
+
+  BLEService *pService = pServer->createService(SERVICE_UUID);
+
+  pCharacteristic = pService->createCharacteristic(
+                      CHARACTERISTIC_UUID,
+                      BLECharacteristic::PROPERTY_READ |
+                      BLECharacteristic::PROPERTY_WRITE |
+                      BLECharacteristic::PROPERTY_NOTIFY |
+                      BLECharacteristic::PROPERTY_INDICATE
+                    );
+
+  pCharacteristic->setCallbacks(new MyCharacteristicCallbacks());
+  pCharacteristic->addDescriptor(new BLE2902());
+
+  pService->start();
+
+  BLEAdvertising *pAdvertising = pServer->getAdvertising();
+  pAdvertising->start();
+  Serial.println("Waiting for a client connection to notify...");
+}
+
+void loop() {
+  if (deviceConnected) {
+    Serial.println("leeeets go");
+  }
+  delay(1000);
+}
