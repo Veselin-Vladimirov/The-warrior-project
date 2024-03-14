@@ -1,0 +1,95 @@
+#include <Arduino.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <BLEDevice.h>
+#include <BLEUtils.h>
+#include <BLEServer.h>
+#include <BLE2902.h>
+
+#define TRIG_PIN 10
+#define ECHO_PIN 9
+#define ONE_WIRE_BUS 4
+#define LASER 21
+#define LDR 2
+
+#define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
+#define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
+
+BLEServer* pServer;
+BLECharacteristic* pCharacteristic;
+
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+
+class MyCallbacks : public BLECharacteristicCallbacks {
+    void onWrite(BLECharacteristic *pCharacteristic) {
+    }
+};
+
+void setup() {
+  Serial.begin(115200);
+  // JSN-SR04
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(LASER, OUTPUT);
+
+  // DS18B20
+  sensors.begin();
+
+  // Bluetooth setup
+  BLEDevice::init("6amandura");
+  pServer = BLEDevice::createServer();
+  BLEService *pService = pServer->createService(SERVICE_UUID);
+  pCharacteristic = pService->createCharacteristic(
+                      CHARACTERISTIC_UUID,
+                      BLECharacteristic::PROPERTY_READ |
+                      BLECharacteristic::PROPERTY_NOTIFY
+                    );
+  pCharacteristic->addDescriptor(new BLE2902());
+  pCharacteristic->setCallbacks(new MyCallbacks());
+  pService->start();
+
+  BLEAdvertising *pAdvertising = pServer->getAdvertising();
+  pAdvertising->start();
+}
+
+void loop() {
+  // JSN-SR04T
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  float depth = duration * 0.1482 / 2;
+
+  if (depth != 0.00) {
+    String depthStr = "Depth: " + String(depth, 2) + " cm";
+    pCharacteristic->setValue(depthStr.c_str());
+    pCharacteristic->notify();
+  }
+
+  delay(1000);
+
+  // DS18B20 (Water Temperature)
+  sensors.requestTemperatures();
+  float waterTemperature = sensors.getTempCByIndex(0);
+
+  if (waterTemperature != DEVICE_DISCONNECTED_C) {
+    String waterTemperatureStr = "Water T: " + String(waterTemperature, 2) + " C";
+    pCharacteristic->setValue(waterTemperatureStr.c_str());
+    pCharacteristic->notify();
+  }
+
+  //Laser
+  digitalWrite(LASER, HIGH);
+
+  //LDR
+  float ldrValue = analogRead(LDR); // Read the analog value from the LDR
+  Serial.print("Turbidity: ");
+  Serial.println(ldrValue); // Print the value to the serial monitor
+  delay(1000); // Wait for a second before reading again
+  String LDRValue = "Turbidity: " + String(ldrValue);
+  pCharacteristic->setValue(LDRValue.c_str());
+  pCharacteristic->notify();
+}
