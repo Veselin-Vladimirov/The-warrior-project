@@ -41,6 +41,10 @@ continuous_sensor_thread.start()
 '''
 
 @app.route('/')
+def mainPage():
+    return render_template('mainPage.html')
+
+@app.route('/graph')
 def index():
     sensors = Sensor.query.all()
     return render_template('index.html', sensors=sensors)
