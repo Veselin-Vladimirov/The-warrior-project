@@ -1,7 +1,7 @@
 import random
 import threading
 import time
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -19,10 +19,11 @@ class Sensor(db.Model):
 with app.app_context(): 
     db.create_all()
 
+'''
 def continuous_sensor_data():
     with app.app_context():
         while True:
-            # Generate random values for name, surname, birth date, and registration number
+            # Generate random values for temperature
             temperature = random.randint(1, 100)
     
             # Add the sensor to the database
@@ -30,18 +31,24 @@ def continuous_sensor_data():
             db.session.add(new_sensor)
             db.session.commit()
 
-            # Sleep for some time before adding the next person data
+            # Sleep for some time before adding the next temperature data
             time.sleep(1)  # Adjust the sleep time as needed
 
 
 continuous_sensor_thread = threading.Thread(target=continuous_sensor_data)
 continuous_sensor_thread.daemon = True  # Daemonize the thread so it stops with the main program
 continuous_sensor_thread.start()
+'''
 
 @app.route('/')
 def index():
     sensors = Sensor.query.all()
     return render_template('index.html', sensors=sensors)
+
+@app.route('/temperature_data')
+def get_temperature_data():
+    temperatures = [sensor.temperature for sensor in Sensor.query.all()]
+    return jsonify(temperatures)
 
 if __name__ == '__main__':
     app.run(debug=True)
