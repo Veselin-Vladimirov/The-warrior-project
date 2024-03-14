@@ -7,10 +7,10 @@ module "eks" {
   version         = "19.21.0"
   cluster_name    = "warrior-cluster"
   cluster_version = "1.28"
-  vpc_id          = "vpc-342c735c"
+  vpc_id          = "vpc-09808750e4924c4b7"
   cluster_endpoint_public_access = true
 
-  subnet_ids = ["subnet-0495ea79", "subnet-de3f7293", "subnet-c96a6aa2"]
+  subnet_ids = ["subnet-0693c378eb2d859d2", "subnet-0cf0778b4532344bb", "subnet-09bf2b063afb3bb8d"]
 
   eks_managed_node_groups = {
     test = {
