@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Main Page</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            text-align: center;
+        }
+
+        .textbox {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .textbox input {
+            width: 200px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+            outline: none;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            z-index: 1;
+            width: 200px;
+            margin-top: 5px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            border-radius: 4px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .textbox:hover .dropdown {
+            display: block;
+        }
+
+        .dropdown-item {
+            cursor: pointer;
+            margin-bottom: 5px;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="textbox">
+            <input type="text" placeholder="Hover to See Options">
+            <div class="dropdown">
+                <div class="dropdown-item">
+                    <a href="/">Option 1</a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="#">Option 2</a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="#">Option 3</a>
+                </div>
+                <div class="dropdown-item">
+                    <a href="#">Option 4</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
