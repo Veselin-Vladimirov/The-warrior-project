@@ -7,66 +7,11 @@
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
-
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            flex-direction: column; /* Ensure content stacks vertically */
-            align-items: center;
-            padding-top: 20px; /* Add padding to the top */
-        }
-
-        .container {
-            text-align: center;
-        }
-
-        .logo-img {
-            width: 700px; /* Adjust the width as needed */
-            height: auto; /* Maintain aspect ratio */
-            margin-bottom: 80px; /* Add some space below the image */
-        }
-
-        .button {
-            cursor: pointer;
-            background-color: #007bff;
-            color: #fff;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-        }
-
-        .dropdown {
-            display: none;
-            position: absolute;
-            z-index: 1;
-            width: 200px;
-            padding: 10px;
-            border: 1px solid #ccc;
-            background-color: #fff;
-            border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
-            left: 50%;
-            transform: translateX(-50%);
-            margin-top: 20px;
-        }
-
-        .dropdown-item {
-            cursor: pointer;
-            margin-bottom: 5px;
-            transition: background-color 0.3s ease;
-        }
-
-        .dropdown-item:hover {
-            background-color: #f0f0f0;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
     <!-- Image at the upper part of the page -->
-    <img class="logo-img" src="static/logo.png" alt="Logo">
+    <img class="logo-img" src="static/images/logo.png" alt="Logo">
 
     <div class="container">
         <!-- Button to show dropdown menu -->
