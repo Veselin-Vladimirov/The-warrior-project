@@ -1,46 +1,20 @@
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Flask SQL App</title>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flask SQL App</title>
 
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
-        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    </head>
-    <body>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/container.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/temperature_graph.js') }}"></script>
+    
+</head>
+<body>
+    <div class="container">
         <h2>Sensor Temperature Line Graph</h2>
-        <canvas id="temperatureChart" width="800" height="400"></canvas>
-
-        <script>
-            fetch('/temperature_data')
-                .then(response => response.json())
-                .then(temperatures => {
-                    const ctx = document.getElementById('temperatureChart').getContext('2d');
-                    const myChart = new Chart(ctx, {
-                        type: 'line',
-                        data: {
-                            labels: Array.from({ length: temperatures.length }, (_, i) => i + 1), // Generating sequential labels
-                            datasets: [{
-                                label: 'Temperature',
-                                data: temperatures,
-                                backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                                borderColor: 'rgba(255, 99, 132, 1)',
-                                borderWidth: 1
-                            }]
-                        },
-                        options: {
-                            scales: {
-                                yAxes: [{
-                                    ticks: {
-                                        beginAtZero: true
-                                    }
-                                }]
-                            }
-                        }
-                    });
-                })
-                .catch(error => console.error('Error fetching temperature data:', error));
-        </script>
-    </body>
-    </html>
+        <canvas id="temperatureChart"></canvas>
+    </div>
+</body>
+</html>
