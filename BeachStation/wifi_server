@@ -1,0 +1,44 @@
+#include <WiFi.h>
+
+const char* apSSID = "ESP32_AP";
+const char* apPassword = "password";
+const int apChannel = 1;
+
+WiFiServer server(80); // Port 80 is commonly used for HTTP
+
+void setup() {
+  Serial.begin(115200);
+  delay(1000);
+
+  // Set ESP32 Dev Kit as an Access Point
+  WiFi.softAP(apSSID, apPassword, apChannel);
+  Serial.println("Access Point started.");
+
+  // Print ESP32 Dev Kit IP address
+  Serial.print("AP IP address: ");
+  Serial.println(WiFi.softAPIP());
+
+  // Start the server
+  server.begin();
+  Serial.println("Server started.");
+}
+
+void loop() {
+  WiFiClient client = server.available();
+  if (client) {
+    Serial.println("New client connected.");
+    while (client.connected()) {
+      if (client.available()) {
+        String data = client.readStringUntil('\n');
+        Serial.println("Data received from client: " + data);
+        // Process the received data here
+
+        // Echo the received data back to the client
+        client.println("Received: " + data);
+        Serial.println("Data echoed back to client: " + data);
+      }
+    }
+    client.stop();
+    Serial.println("Client disconnected.");
+  }
+}
