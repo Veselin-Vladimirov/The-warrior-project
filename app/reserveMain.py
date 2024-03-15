@@ -4,7 +4,7 @@ import time
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static')
 # Replace 'your_new_user', 'your_password', 'your_database', and 'public' with your actual values
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://student:student@localhost:5432/sensor_db'
 db = SQLAlchemy(app)
@@ -15,6 +15,7 @@ class Sensor(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     temperature = db.Column(db.Integer, nullable=False)
+    
 
 with app.app_context(): 
     db.create_all()
