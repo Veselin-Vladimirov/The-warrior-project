@@ -3,18 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flask SQL App</title>
+    <title>Home Page</title>
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/container.css') }}">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script src="{{ url_for('static', filename='js/temperature_graph.js') }}"></script>
-    
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
 <body>
+    <img class="logo-img" src="../static/images/logo.png" alt="Logo">
+
     <div class="container">
-        <h2>Sensor Temperature Line Graph</h2>
-        <canvas id="temperatureChart"></canvas>
+        <button class="button" id="showDropdown">Show Options</button>
+        
+        <div class="dropdown" id="dropdown">
+            <div class="dropdown-item" id="option1">
+                <a href="#">Kiten - Atliman</a>
+            </div>
+            <div class="dropdown-item">
+                <a href="#">Sinemorets - Ustieto</a>
+            </div>
+            <div class="dropdown-item">
+                <a href="#">Albena - Albena</a>
+            </div>
+            <div class="dropdown-item">
+                <a href="#">Lozenets - Arapia</a>
+            </div>
+        </div>
     </div>
+
+    <script src="{{ url_for('static', filename='js/drop_down.js') }}"></script>
 </body>
 </html>
