@@ -13,28 +13,29 @@
             font-family: 'Roboto', sans-serif;
             background-color: #f4f4f4;
             display: flex;
-            justify-content: center;
+            flex-direction: column; /* Ensure content stacks vertically */
             align-items: center;
-            height: 100vh;
+            padding-top: 20px; /* Add padding to the top */
         }
 
         .container {
             text-align: center;
         }
 
-        .textbox {
-            position: relative;
-            display: inline-block;
-            margin-bottom: 20px;
+        .logo-img {
+            width: 700px; /* Adjust the width as needed */
+            height: auto; /* Maintain aspect ratio */
+            margin-bottom: 80px; /* Add some space below the image */
         }
 
-        .textbox input {
-            width: 200px;
-            padding: 10px;
-            border: 1px solid #ccc;
+        .button {
+            cursor: pointer;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
             border-radius: 4px;
             font-size: 16px;
-            outline: none;
         }
 
         .dropdown {
@@ -42,16 +43,14 @@
             position: absolute;
             z-index: 1;
             width: 200px;
-            margin-top: 5px;
             padding: 10px;
             border: 1px solid #ccc;
             background-color: #fff;
             border-radius: 4px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .textbox:hover .dropdown {
-            display: block;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+            left: 50%;
+            transform: translateX(-50%);
+            margin-top: 20px;
         }
 
         .dropdown-item {
@@ -66,24 +65,49 @@
     </style>
 </head>
 <body>
+    <!-- Image at the upper part of the page -->
+    <img class="logo-img" src="static/logo.png" alt="Logo">
+
     <div class="container">
-        <div class="textbox">
-            <input type="text" placeholder="Hover to See Options">
-            <div class="dropdown">
-                <div class="dropdown-item">
-                    <a href="/">Option 1</a>
-                </div>
-                <div class="dropdown-item">
-                    <a href="#">Option 2</a>
-                </div>
-                <div class="dropdown-item">
-                    <a href="#">Option 3</a>
-                </div>
-                <div class="dropdown-item">
-                    <a href="#">Option 4</a>
-                </div>
+        <!-- Button to show dropdown menu -->
+        <button class="button" id="showDropdown">Show Options</button>
+        
+        <!-- Dropdown menu -->
+        <div class="dropdown" id="dropdown">
+            <div class="dropdown-item" id="option1">
+                <a href="#">Option 1</a>
+            </div>
+            <div class="dropdown-item">
+                <a href="#">Option 2</a>
+            </div>
+            <div class="dropdown-item">
+                <a href="#">Option 3</a>
+            </div>
+            <div class="dropdown-item">
+                <a href="#">Option 4</a>
             </div>
         </div>
     </div>
+
+    <script>
+        // Get the button and dropdown elements
+        const showDropdownButton = document.getElementById('showDropdown');
+        const dropdown = document.getElementById('dropdown');
+        
+        // Add click event listener to the button
+        showDropdownButton.addEventListener('click', function() {
+            // Toggle the display of the dropdown menu
+            dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
+        });
+
+        // Add click event listener to Option 1
+        const option1 = document.getElementById('option1');
+        option1.addEventListener('click', function(event) {
+            // Stop the event from propagating
+            event.stopPropagation();
+            // Redirect to /graph
+            window.location.href = '/graph';
+        });
+    </script>
 </body>
 </html>
