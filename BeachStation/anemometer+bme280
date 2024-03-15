@@ -1,0 +1,75 @@
+#include <Wire.h>
+#include <Adafruit_Sensor.h>
+#include <Adafruit_BME280.h>
+
+#define BME_SDA 2
+#define BME_SCL 15
+
+#define ANEMOMETER_PIN 32
+
+Adafruit_BME280 bme;
+long previousMillis = 0;
+const long interval = 1000;
+
+void setup() {
+  Serial.begin(115200);
+  Wire.begin(BME_SDA, BME_SCL);
+  if (!bme.begin(0x76, &Wire)) {
+    Serial.println("Could not find a valid BME280 sensor, check wiring!");
+    while (1);
+  }
+}
+
+void loop() {
+  long currentMillis = millis();
+  
+  if (currentMillis - previousMillis >= interval) {
+    previousMillis = currentMillis;
+
+    // Read the anemometer voltage
+    int sensorValue = analogRead(ANEMOMETER_PIN);
+    float voltage = sensorValue * (5.0 / 4095.0); // Convert analog value to voltage
+
+    // Calculate wind speed
+    float windSpeed = calculateWindSpeed(voltage);
+
+    Serial.print("Anemometer Wind Speed: ");
+    Serial.print(windSpeed);
+    Serial.println(" m/s");
+
+    // Read BME280 sensor
+    Serial.print("BME280 Temperature: ");
+    Serial.print(bme.readTemperature());
+    Serial.println(" °C");
+
+    Serial.print("BME280 Pressure: ");
+    Serial.print(bme.readPressure() / 100.0F); // hPa conversion
+    Serial.println(" hPa");
+
+    Serial.print("BME280 Humidity: ");
+    Serial.print(bme.readHumidity() ); // %
+    Serial.println(" %");
+
+    Serial.println();
+  }
+
+  delay(100); // Adjust delay based on your requirements
+}
+
+float calculateWindSpeed(float voltage) {
+  // Calibration parameters
+  float voltageAtZeroWind = 0.0; // Voltage output at zero wind speed
+  float voltageAtMaxWind = 5.0;  // Voltage output at maximum wind speed
+  float maxWindSpeed = 45.0;     // Maximum wind speed in m/s
+
+  // Calculate the slope (change in wind speed per unit change in voltage)
+  float slope = maxWindSpeed / (voltageAtMaxWind - voltageAtZeroWind);
+
+  // Calculate the wind speed using linear interpolation
+  float windSpeed = slope * (voltage - voltageAtZeroWind);
+
+  // Ensure wind speed is within the valid range
+  windSpeed = constrain(windSpeed, 0, maxWindSpeed);
+
+  return windSpeed;
+}
