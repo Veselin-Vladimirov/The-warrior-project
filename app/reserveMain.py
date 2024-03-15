@@ -1,11 +1,7 @@
-import random
-import threading
-import time
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__, static_folder='static')
-# Replace 'your_new_user', 'your_password', 'your_database', and 'public' with your actual values
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://student:student@localhost:5432/sensor_db'
 db = SQLAlchemy(app)
 
@@ -15,7 +11,6 @@ class Sensor(db.Model):
 
     id = db.Column(db.Integer, primary_key=True)
     temperature = db.Column(db.Integer, nullable=False)
-    
 
 with app.app_context(): 
     db.create_all()
@@ -34,7 +29,7 @@ def get_temperature_data():
     temperatures = [sensor.temperature for sensor in Sensor.query.all()]
     return jsonify(temperatures)
 
-
+'''
 @app.route('/receive-data', methods=['POST'])
 def receive_data():
     if request.method == 'POST':
@@ -47,7 +42,7 @@ def receive_data():
             return jsonify({'message': 'Data received successfully'}), 200
         else:
             return jsonify({'error': 'Temperature data not provided'}), 400
-
+'''
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
