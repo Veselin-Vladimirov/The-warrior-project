@@ -1,0 +1,91 @@
+#include <Arduino.h>
+#include <OneWire.h>
+#include <DallasTemperature.h>
+#include <WiFi.h>
+
+#define TRIG_PIN 10
+#define ECHO_PIN 9
+#define ONE_WIRE_BUS 4
+#define LASER 21
+#define LDR 2
+
+const char* ssid = "ESP32_AP"; // SSID of the ESP32 Dev Kit Access Point
+const char* password = "password"; // Password of the ESP32 Dev Kit Access Point
+const char* serverIP = "192.168.4.1"; // IP address of the ESP32 Dev Kit
+const int serverPort = 80; // Port 80 is commonly used for HTTP
+
+WiFiClient client;
+
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+
+void sendData(String data) {
+  if (client.connect(serverIP, serverPort)) {
+    client.println(data);
+    client.stop();
+  } else {
+    Serial.println("Connection failed.");
+  }
+}
+
+void setup() {
+  Serial.begin(115200);
+  // JSN-SR04
+  pinMode(TRIG_PIN, OUTPUT);
+  pinMode(ECHO_PIN, INPUT);
+  pinMode(LASER, OUTPUT);
+
+  // DS18B20
+  sensors.begin();
+
+  // Connect to ESP32 Dev Kit Access Point
+  Serial.println("Connecting to WiFi");
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(1000);
+    Serial.print(".");
+  }
+  Serial.println("");
+  Serial.println("WiFi connected.");
+
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void loop() {
+  // JSN-SR04T
+  digitalWrite(TRIG_PIN, LOW);
+  delayMicroseconds(2);
+  digitalWrite(TRIG_PIN, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(TRIG_PIN, LOW);
+  long duration = pulseIn(ECHO_PIN, HIGH);
+  float depth = duration * 0.1482 / 2;
+
+  if (depth != 0.00) {
+    String depthStr = "Depth: " + String(depth, 2) + " cm";
+    sendData(depthStr);
+  }
+
+  delay(1000);
+
+  // DS18B20 (Water Temperature)
+  sensors.requestTemperatures();
+  float waterTemperature = sensors.getTempCByIndex(0);
+
+  if (waterTemperature != DEVICE_DISCONNECTED_C) {
+    String waterTemperatureStr = "Water T: " + String(waterTemperature, 2) + " C";
+    sendData(waterTemperatureStr);
+  }
+
+  //Laser
+  digitalWrite(LASER, HIGH);
+
+  //LDR
+  float ldrValue = analogRead(LDR); // Read the analog value from the LDR
+  Serial.print("Turbidity: ");
+  Serial.println(ldrValue); // Print the value to the serial monitor
+  delay(1000); // Wait for a second before reading again
+  String LDRValue = "Turbidity: " + String(ldrValue);
+  sendData(LDRValue);
+}
