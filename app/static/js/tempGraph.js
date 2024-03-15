@@ -1,7 +1,7 @@
-fetch('/temperature_data')
+fetch('/temp-data')
     .then(response => response.json())
     .then(temperatures => {
-        const ctx = document.getElementById('temperatureChart').getContext('2d');
+        const ctx = document.getElementById('tempChart').getContext('2d');
         const myChart = new Chart(ctx, {
             type: 'line',
             data: {

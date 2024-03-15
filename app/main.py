@@ -8,16 +8,16 @@ with app.app_context():
     Base.metadata.create_all(engine)
 
 @app.route('/')
-def mainPage():
-    return render_template('mainPage.html')
-
-@app.route('/graph')
 def index():
+    return render_template('index.html')
+
+@app.route('/temp-graph')
+def temp_graph():
     session = Session()
     sensors = session.query(Sensor).all()
-    return render_template('index.html', sensors=sensors)
+    return render_template('temp-graph.html', sensors=sensors)
 
-@app.route('/temperature_data')
+@app.route('/temp-data')
 def get_temperature_data():
     session = Session()
     temperatures = [sensor.temperature for sensor in session.query(Sensor).all()]

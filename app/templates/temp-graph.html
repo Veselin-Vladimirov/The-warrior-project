@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sensor Temperature Line Graph</title>
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/tempGraph.js') }}"></script>
+</head>
+<body>
+    <h2>Sensor Temperature Line Graph</h2>
+    <canvas id="tempChart" width="800" height="400"></canvas>
+</body>
+</html>

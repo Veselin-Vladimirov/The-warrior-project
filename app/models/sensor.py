@@ -1,5 +1,5 @@
 from models.db import Base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer
 
 class Sensor(Base):
     __tablename__ = 'sensor'

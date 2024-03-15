@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  app:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5000"
+    volumes:
+      - .:/app
+      - static_volume:/app/static
+    depends_on:
+      - db
+    environment:
+      - SQLALCHEMY_DATABASE_URI=postgresql://warrior:12345@db:5432/sensor_db
+      - FLASK_ENV=development
+    networks:
+      - dbnet
+
+  db:
+    image: postgres:16-alpine
+    restart: always
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: warrior
+      POSTGRES_PASSWORD: 12345
+      POSTGRES_DB: sensor_db
+    healthcheck:
+      test: pg_isready -U postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - dbnet
+
+volumes:
+  postgres_data:
+  static_volume:
+
+networks:
+  dbnet:
