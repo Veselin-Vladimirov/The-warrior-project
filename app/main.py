@@ -1,31 +1,51 @@
-from flask import Flask
+
+import random
+import threading
+import time
+from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
+# Replace 'your_new_user', 'your_password', 'your_database', and 'public' with your actual values
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://warrior:12345@db:5432/sensor_db'
+db = SQLAlchemy(app)
 
-app.config.from_pyfile('config.cfg')
+class Sensor(db.Model):
+    __tablename__ = 'sensor'
+    __table_args__ = {'schema': 'public'}
 
-db = SQLAlchemy()
-db.init_app(app)
+    id = db.Column(db.Integer, primary_key=True)
+    temperature = db.Column(db.Integer, nullable=False)
 
-class User(db.Model):
-    __tablename__ = 'users'
-    id = db.Column(db.Integer(), primary_key=True)
-    name = db.Column(db.String())
-    surname = db.Column(db.String())
-
-@app.route('/test')
-def test():
-    return 'test test'
-
-@app.route('/test_db')
-def test_db():
+with app.app_context(): 
     db.create_all()
-    db.session.commit()
-    user = User.query.first()
-    if not user:
-        u = User(name='warrior', surname='warrior')
-        db.session.add(u)
-        db.session.commit()
-    user = User.query.first()
-    return "User '{} {}' is from database".format(user.name, user.surname)
+
+@app.route('/')
+def mainPage():
+    return render_template('mainPage.html')
+
+@app.route('/graph')
+def index():
+    sensors = Sensor.query.all()
+    return render_template('index.html', sensors=sensors)
+
+@app.route('/temperature_data')
+def get_temperature_data():
+    temperatures = [sensor.temperature for sensor in Sensor.query.all()]
+    return jsonify(temperatures)
+
+@app.route('/receive-data', methods=['POST'])
+def receive_data():
+    if request.method == 'POST':
+        data = request.json
+        temperature = data.get('temperature')
+        if temperature is not None:
+            new_sensor = Sensor(temperature=temperature)
+            db.session.add(new_sensor)
+            db.session.commit()
+            return jsonify({'message': 'Data received successfully'}), 200
+        else:
+            return jsonify({'error': 'Temperature data not provided'}), 400
+
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
