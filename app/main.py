@@ -1,13 +1,10 @@
-
-import random
-import threading
-import time
+import os
 from flask import Flask, render_template, request, redirect, url_for, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 # Replace 'your_new_user', 'your_password', 'your_database', and 'public' with your actual values
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://warrior:12345@db:5432/sensor_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['SQLALCHEMY_DATABASE_URI']
 db = SQLAlchemy(app)
 
 class Sensor(db.Model):
@@ -34,18 +31,18 @@ def get_temperature_data():
     temperatures = [sensor.temperature for sensor in Sensor.query.all()]
     return jsonify(temperatures)
 
-@app.route('/receive-data', methods=['POST'])
-def receive_data():
-    if request.method == 'POST':
-        data = request.json
-        temperature = data.get('temperature')
-        if temperature is not None:
-            new_sensor = Sensor(temperature=temperature)
-            db.session.add(new_sensor)
-            db.session.commit()
-            return jsonify({'message': 'Data received successfully'}), 200
-        else:
-            return jsonify({'error': 'Temperature data not provided'}), 400
+# @app.route('/receive-data', methods=['POST'])
+# def receive_data():
+#     if request.method == 'POST':
+#         data = request.json
+#         temperature = data.get('temperature')
+#         if temperature is not None:
+#             new_sensor = Sensor(temperature=temperature)
+#             db.session.add(new_sensor)
+#             db.session.commit()
+#             return jsonify({'message': 'Data received successfully'}), 200
+#         else:
+#             return jsonify({'error': 'Temperature data not provided'}), 400
 
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
