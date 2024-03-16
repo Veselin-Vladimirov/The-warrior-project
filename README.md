@@ -1,6 +1,9 @@
-![image](https://github.com/Veselin-Vladimirov/The-warrior-project/blob/main/Pictures/Logos/TTS/Biglogo.png).
+<p align="center">
+  <img width="600" height="200" src="https://github.com/Veselin-Vladimirov/The-warrior-project/blob/main/Pictures/Logos/TTS/Biglogo.png">
+</p>
 ## 
-![image](https://github.com/Veselin-Vladimirov/The-warrior-project/blob/main/Pictures/Logos/Hactues/hacktueslogo.png).
+
+![image](https://github.com/Veselin-Vladimirov/The-warrior-project/blob/main/Pictures/Logos/Hactues/hacktueslogo.png)
 *Проектът е създаден за хакатона "Hack TUES 10" на Технологично училище "Електронни системи" към Технически университет-София.*
 
 ## **Автори:**
