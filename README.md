@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="600" height="200" src="https://github.com/Veselin-Vladimirov/The-warrior-project/blob/main/Pictures/Logos/TTS/Biglogo.png">
+  <img src="https://github.com/Veselin-Vladimirov/The-warrior-project/blob/main/Pictures/Logos/TTS/Biglogo.png">
 </p>
 ## 
 
