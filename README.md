@@ -1,7 +1,7 @@
 <p align="center">
   <img src="https://github.com/Veselin-Vladimirov/The-warrior-project/blob/main/Pictures/Logos/TTS/Biglogo.png">
 </p>
-##
+##  
 <p align="center">
   <img src="https://github.com/Veselin-Vladimirov/The-warrior-project/blob/main/Pictures/Logos/Hactues/hacktueslogo.png">
 </p>
