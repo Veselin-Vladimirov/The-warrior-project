@@ -21,6 +21,8 @@
 - HTML
 - CSS
 - JavaScript
+## **Блокова схема**
+![image](https://github.com/Veselin-Vladimirov/The-warrior-project/blob/main/Schematics/BlockScheme.png)
 
 ## **Автори:**
 - **Веселин Владимиров** - *Разработчик на софтуер*
