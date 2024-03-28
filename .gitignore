@@ -1,5 +1,4 @@
-# Ignore the entire .terraform directory
-terraform/.terraform/*
+The-warrior-project/Pictures/.
 
 # Ignore the .terraform.lock.hcl file
 terraform/.terraform.lock.hcl
