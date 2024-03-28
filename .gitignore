@@ -1,5 +1,4 @@
-The-warrior-project/Pictures/.
-
-# Ignore the .terraform.lock.hcl file
-terraform/.terraform.lock.hcl
+The-warrior-project/Pictures/*
+The-warrior-project/Presentation/*
+The-warrior-project/Schematics/*
 
