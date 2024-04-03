@@ -46,6 +46,6 @@ def receive_data():
 
 
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
 
 print("Database URI:", os.environ.get('SQLALCHEMY_DATABASE_URI'))
