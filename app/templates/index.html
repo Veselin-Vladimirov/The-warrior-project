@@ -14,7 +14,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" style="background-color: #d8ecff !important; ">
     <div class="container-fluid">
         <a class="navbar-brand" href="#">
-            <img src="../static/images/logo.png" alt="Logo" width="200" style="position: sticky;">
+            <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="200" style="position: sticky;">
         </a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -57,8 +57,8 @@
             </p>
         </div>
         <div class="col-lg-4">
-            <img src="../static/images/img1.png" alt="Устройство 1"  width="400" style="margin-bottom: 4rem; margin-top: 1rem;">
-            <img src="../static/images/img2.png" alt="Устройство 2"  width="400">
+            <img src="{{ url_for('static', filename='images/img1.jpg') }}" alt="Устройство 1" width="400" style="margin-bottom: 4rem; margin-top: 1rem;">
+            <img src="{{ url_for('static', filename='images/img2.jpg') }}" alt="Устройство 2" width="400">
         </div>
     </div>
 </div>
@@ -117,7 +117,7 @@
     <div class="row py-5">
         <div class="col-lg-4">
             <div class="logo">
-                <img src="../static/images/logo.png" alt="Logo" width="200">
+                <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" width="200">
             </div>
             <p style="font-size: small;">"Tidal Tech Station" предлага революционен подход към преживяването на плажа.</p>
             <div class="socials">
