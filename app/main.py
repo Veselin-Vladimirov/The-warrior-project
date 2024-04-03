@@ -1,20 +1,17 @@
-from flask import Flask, rendertemplate, request, jsonify
-from models.sensor import Sensor
-from models.db import Base, engine, Session
-from flasksqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
 import os
-from sqlalchemy.orm import sessionmaker
 
-print("Database URI:", os.environ.get('SQLALCHEMYDATABASEURI'))
-
-app = Flask(name)
+app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
-print("Database URI:", os.environ.get('SQLALCHEMY_DATABASE_URI'))
 db = SQLAlchemy(app)
-Session = sessionmaker(bind=db.engine)
 
+# Your models must be imported after db is created
+from models.sensor import Sensor
+from models.db import Base, engine
 
-with app.app_context(): 
+# Create tables in the database (this is safe to call multiple times)
+with app.app_context():
     Base.metadata.create_all(engine)
 
 @app.route('/')
@@ -23,14 +20,12 @@ def index():
 
 @app.route('/temp-graph')
 def temp_graph():
-    session = Session()
-    sensors = session.query(Sensor).all()
+    sensors = Sensor.query.all()
     return render_template('temp-graph.html', sensors=sensors)
 
 @app.route('/temp-data')
 def get_temperature_data():
-    session = Session()
-    temperatures = [sensor.temperature for sensor in session.query(Sensor).all()]
+    temperatures = [sensor.temperature for sensor in Sensor.query.all()]
     return jsonify(temperatures)
 
 @app.route('/receive-data', methods=['POST'])
@@ -39,17 +34,12 @@ def receive_data():
         data = request.json
         temperature = data.get('temperature')
         if temperature is not None:
-            session = Session()
             new_sensor = Sensor(temperature=temperature)
-            session.add(new_sensor)
-            session.commit()
-            session.close()
+            db.session.add(new_sensor)
+            db.session.commit()
             return jsonify({'message': 'Temperature data received successfully'}), 200
         else:
             return jsonify({'error': 'Temperature data not provided'}), 400
 
-
-if __name == '__main':
+if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5564, debug=True)
-
-print("Database URI:", os.environ.get('SQLALCHEMY_DATABASE_URI'))
