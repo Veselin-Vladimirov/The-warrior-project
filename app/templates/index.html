@@ -4,33 +4,147 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Home Page</title>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto&display=swap">
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/remixicon/3.5.0/remixicon.min.css">
+    <link rel="stylesheet" href="static/css/style.css">
 </head>
-<body>
-    <img class="logo-img" src="../static/images/logo.png" alt="Logo">
+<body class="bg-white text-dark">
 
-    <div class="container">
-        <button class="button" id="showDropdown">Show Options</button>
-        
-        <div class="dropdown" id="dropdown">
-            <div class="dropdown-item" id="option1">
-                <a href="#">Kiten - Atliman</a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" style="background-color: #d8ecff !important;">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <img src="../static/images/logo.png" alt="Logo" width="200">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ">
+                <li class="nav-item">
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#features" style="margin-right: 2rem; font-size: 120%;">Функции</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#" style="margin-right: 2rem; font-size: 120%;">Цени</a>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="margin-right: 2rem; font-size: 120%;">
+                        Градове
+                    </a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                        <li><a class="dropdown-item" href="#">Kiten - Atliman</a></li>
+                        <li><a class="dropdown-item" href="#">Sinemorets - Ustieto</a></li>
+                        <li><a class="dropdown-item" href="#">Albena - Albena</a></li>
+                        <li><a class="dropdown-item" href="#">Lozenets - Arapia</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#about-us" style="margin-right: 2rem; font-size: 120%;">За Нас</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-lg-8">
+            <h3 class="fw-bold text-uppercase" style="color: #a8c7ff; text-align: left; margin-top: 3rem;">Иновация за Вашия Плажен Престой</h3>
+            <p style="color: #a8c7ff; text-align: left; max-width: 500px; margin-top: 2rem; margin-bottom: 4rem; font-size: 120%;">
+                "Tidal Tech Station" е разработена да предоставя най-точната информация за морските условия в реално време. С нашата система ще бъдете винаги информирани за метеорологичните условия, качеството на водата и морската среда. Всички данни се актуализират на нашия уебсайт, осигурявайки ви спокоен и безопасен престой на плажа.
+            </p>
+        </div>
+        <div class="col-lg-4">
+            <img src="../static/images/logo.png" alt="Устройство 1"  width="350" style="margin-bottom: 7rem; margin-top: 1rem;">
+            <img src="../static/images/logo.png" alt="Устройство 2"  width="350">
+        </div>
+    </div>
+</div>
+
+<section class="container my-5" id="features">
+    <h2 class="headera text-center fw-bold my-4" style="color: #a8c7ff; ">Какво предлага нашето решение?</h2>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+        <div class="col">
+            <div class="card h-150 text-center">
+                <div class="card-body">
+                    <h3 class="card-title" style="color: #a8c7ff; margin-bottom: 1rem;">Free Call</h3>
+                    <p class="card-text" style="color: #a8c7ff;">
+                        A free video chat in which we will clarify your 
+                        goals and whether I can help you achieve them.
+                    </p>
+                </div>
             </div>
-            <div class="dropdown-item">
-                <a href="#">Sinemorets - Ustieto</a>
+        </div>
+        <div class="col">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h3 class="card-title" style="color: #a8c7ff; margin-bottom: 1rem;">Free Call</h3>
+                    <p class="card-text" style="color: #a8c7ff;">
+                        A free video chat in which we will clarify your 
+                        goals and whether I can help you achieve them.
+                    </p>
+                </div>
             </div>
-            <div class="dropdown-item">
-                <a href="#">Albena - Albena</a>
+        </div>
+        <div class="col">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h3 class="card-title" style="color: #a8c7ff; margin-bottom: 1rem;">Free Call</h3>
+                    <p class="card-text" style="color: #a8c7ff;">
+                        A free video chat in which we will clarify your 
+                        goals and whether I can help you achieve them.
+                    </p>
+                </div>
             </div>
-            <div class="dropdown-item">
-                <a href="#">Lozenets - Arapia</a>
+        </div>
+        <div class="col">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h3 class="card-title" style="color: #a8c7ff; margin-bottom: 1rem;">Free Call</h3>
+                    <p class="card-text" style="color: #a8c7ff;">
+                        A free video chat in which we will clarify your 
+                        goals and whether I can help you achieve them.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
+</section> 
 
-    <script src="{{ url_for('static', filename='js/drop_down.js') }}"></script>
+<footer class="footer container-fluid bg-light text-center" id="about-us" style="background-color: #d8ecff !important; font-size: 120%;">
+    <div class="row py-5">
+        <div class="col-lg-4">
+            <div class="logo">
+                <img src="../static/images/logo.png" alt="Logo" width="200">
+            </div>
+            <p style="font-size: small;">"Tidal Tech Station" предлага революционен подход към преживяването на плажа.</p>
+            <div class="socials">
+                <a><i class="ri-instagram-line"></i></a>
+                <a><i class="ri-facebook-line"></i></a>
+                <a><i class="ri-twitter-line"></i></a>
+            </div>
+        </div>
+        <div class="col-lg-4">
+            <h3>За нас</h3>
+            <a>Блогове</a><br>
+            <a>Канали</a><br>
+            <a>Спонсори</a>
+        </div>
+        <div class="col-lg-4">
+            <h3>Контакти</h3>
+            <a>Свържете се с нас</a><br>
+            <a>Политика за поверителност</a><br>
+            <a>Общи условия</a>
+        </div>
+    </div>
+</footer>
+
+<div class="container-fluid text-center py-3" style="background-color: #d8ecff;">
+    © 2023 6amandura By "The Warriors"
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script src="{{ url_for('static', filename='js/drop_down.js') }}"></script>
 </body>
 </html>
