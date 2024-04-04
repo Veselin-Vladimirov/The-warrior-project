@@ -12,7 +12,7 @@ from models.db import Base, engine
 with app.app_context():
     Base.metadata.create_all(engine)
 
-@app.route('/mainPage')
+@app.route('/')
 def index():
     return render_template('index.html')
 
