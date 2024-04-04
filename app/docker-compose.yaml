@@ -1,17 +1,29 @@
 version: '3.8'
 
-volumes:
-  static_volume:
-
 services:
   app:
     restart: always
-    image: 471112761484.dkr.ecr.eu-central-1.amazonaws.com/warrior:latest
+    build: .
     ports:
       - "80:5000"
-    volumes:
-      - .:/app
-      - static_volume:/app/static
     environment:
       - SQLALCHEMY_DATABASE_URI=postgresql://warrior:1122334455@postgres-db1.ctyge4wgoiux.eu-central-1.rds.amazonaws.com:5432/postgresdb
       - FLASK_ENV=development
+    volumes:
+      - .:/app
+      - /app/node_modules
+      - /app/__pycache__
+    depends_on:
+      - db
+
+  db:
+    image: postgres:latest
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_USER=warrior
+      - POSTGRES_PASSWORD=1122334455
+      - POSTGRES_DB=postgresdb
+
+volumes:
+  postgres_data:
