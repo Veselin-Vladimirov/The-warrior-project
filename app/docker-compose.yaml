@@ -3,7 +3,7 @@ version: '3.8'
 services:
   app:
     restart: always
-    build: .
+    image: 471112761484.dkr.ecr.eu-central-1.amazonaws.com/warrior:latest
     ports:
       - "80:5000"
     environment:
@@ -11,19 +11,7 @@ services:
       - FLASK_ENV=development
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/__pycache__
-    depends_on:
-      - db
-
-  db:
-    image: postgres:latest
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    environment:
-      - POSTGRES_USER=warrior
-      - POSTGRES_PASSWORD=1122334455
-      - POSTGRES_DB=postgresdb
+      - static_volume:/app/static
 
 volumes:
-  postgres_data:
+  static_volume:
