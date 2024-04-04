@@ -6,15 +6,13 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 db = SQLAlchemy(app)
 
-# Your models must be imported after db is created
 from models.sensor import Sensor
 from models.db import Base, engine
 
-# Create tables in the database (this is safe to call multiple times)
 with app.app_context():
     Base.metadata.create_all(engine)
 
-@app.route('/')
+@app.route('/mainPage')
 def index():
     return render_template('index.html')
 
