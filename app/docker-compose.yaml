@@ -10,8 +10,7 @@ services:
       - SQLALCHEMY_DATABASE_URI=postgresql://warrior:1122334455@postgres-db1.ctyge4wgoiux.eu-central-1.rds.amazonaws.com:5432/postgresdb
       - FLASK_ENV=development
     volumes:
-      - .:/app
-      - static_volume:/app/static/
-      
+      - ./static:/app/static
+
 volumes:
   static_volume:
