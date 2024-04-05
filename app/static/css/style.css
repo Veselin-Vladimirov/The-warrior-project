@@ -5,6 +5,13 @@
     margin-bottom: 1rem;
 }
 
+.navbar {
+    position: fixed !important;
+    top: 0 !important;
+    width: 100% !important;
+}
+
+
 .footer {
     background-color: #000000 !important;
 }
