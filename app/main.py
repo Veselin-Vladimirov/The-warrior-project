@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 db = SQLAlchemy(app)
 
@@ -40,4 +41,4 @@ def receive_data():
             return jsonify({'error': 'Temperature data not provided'}), 400
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5564, debug=True)
+    app.run(host='0.0.0.0', port=5564, debug=True, use_reloader=True)
