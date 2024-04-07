@@ -10,8 +10,6 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-from models.sensor import Sensor
-
 with app.app_context():
     db.create_all()
 
@@ -25,6 +23,7 @@ def graphs():
 
 @app.route('/sensor-data')
 def get_sensor_data():
+    from models.sensor import Sensor
     sensors = Sensor.query.all()
     sensor_data = [{
         'temperature': sensor.temperature,
