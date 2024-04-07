@@ -1,12 +1,8 @@
-from sqlalchemy import Column, Integer
-from .db import Base
+from main import db
 
-class Sensor(Base):
-    __tablename__ = 'sensor'
-    __table_args__ = {'schema': 'public'}
-
-    id = Column(Integer, primary_key=True)
-    temperature = Column(Integer, nullable=False)
-    humidity = Column(Integer, nullable=False)
-    wind_speed = Column(Integer, nullable=False)
-    pressure = Column(Integer, nullable=False)
+class Sensor(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    temperature = db.Column(db.Float, nullable=False)
+    humidity = db.Column(db.Float, nullable=False)
+    wind_speed = db.Column(db.Float, nullable=False)
+    pressure = db.Column(db.Float, nullable=False)
