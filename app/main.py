@@ -1,21 +1,18 @@
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
-import os
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app)
+db = SQLAlchemy(app) 
 
 from models.sensor import Sensor
-from models.db import engine, Base
-
-db.init_app(app)
+from models.db import Base
 
 with app.app_context():
-    Base.metadata.create_all(engine)
+    Base.metadata.create_all(bind=db.engine)
 
 @app.route('/')
 def index():
