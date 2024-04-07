@@ -5,13 +5,10 @@ import os
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
 from models.sensor import Sensor
-from models.db import Base, engine
-
-with app.app_context():
-    Base.metadata.create_all(engine)
 
 @app.route('/')
 def index():
