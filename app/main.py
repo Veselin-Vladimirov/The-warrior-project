@@ -19,9 +19,9 @@ with app.app_context():
 def index():
     return render_template('index.html')
 
-@app.route('/temp-graph')
+@app.route('/graphs')
 def temp_graph():
-    return render_template('temp-graph.html')
+    return render_template('graphs.html')
 
 @app.route('/sensor-data')
 def get_sensor_data():
