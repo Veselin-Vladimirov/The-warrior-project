@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI', 'your_default_db_uri')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
@@ -26,13 +26,14 @@ def graphs():
 @app.route('/sensor-data')
 def get_sensor_data():
     sensors = Sensor.query.all()
-    sensor_data = {
-        'temperatures': [sensor.temperature for sensor in sensors],
-        'humidities': [sensor.humidity for sensor in sensors],
-        'wind_speeds': [sensor.wind_speed for sensor in sensors],
-        'pressures': [sensor.pressure for sensor in sensors]
-    }
+    sensor_data = [{
+        'temperature': sensor.temperature,
+        'humidity': sensor.humidity,
+        'wind_speed': sensor.wind_speed,
+        'pressure': sensor.pressure
+    } for sensor in sensors]
     return jsonify(sensor_data)
+
 
 @app.route('/receive-data', methods=['POST'])
 def receive_data():
