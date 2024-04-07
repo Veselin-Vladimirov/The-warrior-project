@@ -3,24 +3,24 @@ from flask_sqlalchemy import SQLAlchemy
 import os
 
 app = Flask(__name__)
+
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI', 'your_default_db_uri')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-db = SQLAlchemy(app) 
+db = SQLAlchemy(app)
 
 from models.sensor import Sensor
-from models.db import Base
 
 with app.app_context():
-    Base.metadata.create_all(bind=db.engine)
+    db.create_all()
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
 @app.route('/graphs')
-def temp_graph():
+def graphs():
     return render_template('graphs.html')
 
 @app.route('/sensor-data')
@@ -38,13 +38,13 @@ def get_sensor_data():
 def receive_data():
     if request.method == 'POST':
         data = request.json
-        sensor = Sensor(
+        new_sensor = Sensor(
             temperature=data.get('temperature'),
             humidity=data.get('humidity'),
             wind_speed=data.get('wind_speed'),
             pressure=data.get('pressure')
         )
-        db.session.add(sensor)
+        db.session.add(new_sensor)
         db.session.commit()
         return jsonify({'message': 'Sensor data received successfully'}), 200
 
