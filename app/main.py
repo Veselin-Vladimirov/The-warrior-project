@@ -1,14 +1,16 @@
 from flask import Flask, render_template, request, jsonify
-from flask_sqlalchemy import SQLAlchemy
+from .models.sensor import Sensor
+from .models.db import db, engine, Base
 import os
 
 app = Flask(__name__)
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('SQLALCHEMY_DATABASE_URI')
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+db.init_app(app)
 
-from models.sensor import Sensor
+with app.app_context():
+    Base.metadata.create_all(engine)
 
 @app.route('/')
 def index():
@@ -16,26 +18,32 @@ def index():
 
 @app.route('/temp-graph')
 def temp_graph():
-    sensors = Sensor.query.all()
-    return render_template('temp-graph.html', sensors=sensors)
+    return render_template('temp-graph.html')
 
-@app.route('/temp-data')
-def get_temperature_data():
-    temperatures = [sensor.temperature for sensor in Sensor.query.all()]
-    return jsonify(temperatures)
+@app.route('/sensor-data')
+def get_sensor_data():
+    sensors = Sensor.query.all()
+    sensor_data = {
+        'temperatures': [sensor.temperature for sensor in sensors],
+        'humidities': [sensor.humidity for sensor in sensors],
+        'wind_speeds': [sensor.wind_speed for sensor in sensors],
+        'pressures': [sensor.pressure for sensor in sensors]
+    }
+    return jsonify(sensor_data)
 
 @app.route('/receive-data', methods=['POST'])
 def receive_data():
     if request.method == 'POST':
         data = request.json
-        temperature = data.get('temperature')
-        if temperature is not None:
-            new_sensor = Sensor(temperature=temperature)
-            db.session.add(new_sensor)
-            db.session.commit()
-            return jsonify({'message': 'Temperature data received successfully'}), 200
-        else:
-            return jsonify({'error': 'Temperature data not provided'}), 400
+        sensor = Sensor(
+            temperature=data.get('temperature'),
+            humidity=data.get('humidity'),
+            wind_speed=data.get('wind_speed'),
+            pressure=data.get('pressure')
+        )
+        db.session.add(sensor)
+        db.session.commit()
+        return jsonify({'message': 'Sensor data received successfully'}), 200
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5564, debug=True, use_reloader=True)
