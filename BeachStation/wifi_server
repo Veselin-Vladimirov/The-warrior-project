@@ -31,14 +31,32 @@ void loop() {
       if (client.available()) {
         String data = client.readStringUntil('\n');
         Serial.println("Data received from client: " + data);
-        // Process the received data here
 
-        // Echo the received data back to the client
-        client.println("Received: " + data);
-        Serial.println("Data echoed back to client: " + data);
+        // Split the received string by the delimiter ";"
+        String values[3];
+        int index = 0;
+        int lastIndex = 0;
+        for (int i = 0; i < data.length(); i++) {
+          if (data.charAt(i) == ';') {
+            values[index] = data.substring(lastIndex, i);
+            lastIndex = i + 1;
+            index++;
+          }
+        }
+        // Handle the last value
+        values[index] = data.substring(lastIndex);
+
+        // Convert and print the extracted values
+        float depth = values[0].toFloat();
+        float temperature = values[1].toFloat();
+        float light = values[2].toFloat();
+
+        Serial.println("Depth: " + String(depth) + " m");
+        Serial.println("Temperature: " + String(temperature) + " °C");
+        Serial.println("Light: " + String(light));
+
+        // You can now use these values for further processing or actions.
       }
     }
-    client.stop();
-    Serial.println("Client disconnected.");
   }
 }
