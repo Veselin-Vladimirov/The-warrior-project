@@ -8,9 +8,11 @@
 const char* ssid = "TP-Link_D9";
 const char* password = "12345678";
 const char* serverAddress = "http://192.168.168.38:5564/data";
+const char* apSSID = "ESP32_AP";
+const char* apPassword = "password";
+const int apChannel = 1;
 
-
-
+WiFiServer server(80); // Port 80 is commonly used for HTTP
 #define BME_SDA 2
 #define BME_SCL 15
 #define ANEMOMETER_PIN 32
@@ -18,8 +20,21 @@ const char* serverAddress = "http://192.168.168.38:5564/data";
 Adafruit_BME280 bme;
 long previousMillis = 0;
 const long interval = 1000;
+float depth, waterTemperature, clearness;
 
 void setup() {
+    // Set ESP32 Dev Kit as an Access Point
+  WiFi.softAP(apSSID, apPassword, apChannel);
+  Serial.println("Access Point started.");
+
+  // Print ESP32 Dev Kit IP address
+  Serial.print("AP IP address: ");
+  Serial.println(WiFi.softAPIP());
+
+  // Start the server
+  server.begin();
+  Serial.println("Server started.");
+
   Serial.begin(115200);
   Wire.begin(BME_SDA, BME_SCL);
   if (!bme.begin(0x76, &Wire)) {
@@ -38,10 +53,44 @@ void setup() {
 
 void loop() {
   long currentMillis = millis();
-  
+
   if (currentMillis - previousMillis >= interval) {
     previousMillis = currentMillis;
+    WiFiClient client = server.available();
+    if (client) {
+      Serial.println("New client connected.");
+      while (client.connected()) {
+        if (client.available()) {
+          String data = client.readStringUntil('\n');
+          Serial.println("Data received from client: " + data);
 
+          // Split the received string by the delimiter ";"
+          String values[3];
+          int index = 0;
+          int lastIndex = 0;
+          for (int i = 0; i < data.length(); i++) {
+            if (data.charAt(i) == ';') {
+              values[index] = data.substring(lastIndex, i);
+              lastIndex = i + 1;
+              index++;
+            }
+          }
+          // Handle the last value
+          values[index] = data.substring(lastIndex);
+
+          // Convert and print the extracted values
+          depth = values[0].toFloat();
+          waterTemperature = values[1].toFloat();
+          clearness = values[2].toFloat();
+
+          Serial.println("Depth: " + String(depth) + " m");
+          Serial.println("Temperature: " + String(waterTemperature) + " °C");
+          Serial.println("clearness: " + String(clearness));
+
+          // You can now use these values for further processing or actions.
+        }
+      }
+    }
     // Read the anemometer voltage
     int sensorValue = analogRead(ANEMOMETER_PIN);
     float voltage = sensorValue * (5.0 / 4095.0); // Convert analog value to voltage
@@ -50,11 +99,11 @@ void loop() {
     float windSpeed = calculateWindSpeed(voltage);
 
     // Read BME280 sensor
-    float temperature = bme.readTemperature();
+    float airTemperature = bme.readTemperature();
     float pressure = bme.readPressure() / 100.0F; // hPa conversion
     float humidity = bme.readHumidity();
     Serial.println("temp: ");
-    Serial.print(temperature);
+    Serial.print(airTemperature);
     Serial.println("press: ");
     Serial.print(pressure);
     Serial.println("hum: ");
@@ -63,7 +112,10 @@ void loop() {
     Serial.print(windSpeed);
     // Create JSON payload
     StaticJsonDocument<500> jsonDocument;
-    jsonDocument["temperature"] = temperature;
+    jsonDocument["depth"] = depth;
+    jsonDocument["air_temperature"] = airTemperature;
+    jsonDocument["water_temperature"] = waterTemperature;
+    jsonDocument["clearness"] = clearness;
     jsonDocument["pressure"] = pressure;
     jsonDocument["humidity"] = humidity;
     jsonDocument["wind_speed"] = windSpeed;
