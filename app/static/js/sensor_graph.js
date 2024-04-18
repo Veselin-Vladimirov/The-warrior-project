@@ -60,10 +60,10 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                     }
                 },
                 x: {
-                    type: 'time', // Указва, че x-осът е времева ос
+                    type: 'time',
                     time: {
-                        unit: 'day', // Можете да настройвате това според нуждите
-                        tooltipFormat: 'll' // Формат на датите при hover
+                        unit: 'day',
+                        tooltipFormat: 'll'
                     },
                     title: {
                         display: true,
@@ -71,7 +71,6 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                     },
                     ticks: {
                         callback: function(value, index, values) {
-                            // Показва етикет само на всеки четвърти запис
                             return index % 4 === 0 ? value : '';
                         },
                         maxRotation: 0,
@@ -79,15 +78,6 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                     }
                 }
             },
-            plugins: {
-                tooltip: {
-                    callbacks: {
-                        title: function(tooltipItems) {
-                            return new Date(tooltipItems[0].label).toLocaleString(); // Форматира датата в tooltip
-                        }
-                    }
-                }
-            }
         }
     });
 
