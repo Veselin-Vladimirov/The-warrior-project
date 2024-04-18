@@ -63,7 +63,11 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                 x: {
                     title: { display: true,
                              align: 'center', font: { size: 18 } },
-                    ticks: { autoSkip: true, maxTicksLimit: 20, }
+                    ticks: { 
+                        callback: function(value, index, values) {
+                        return index % 4 === 0 ? value : '';
+                        },
+                        autoSkip: false, maxTicksLimit: 20, maxRotation: 0,}
                 }
             }
         }
