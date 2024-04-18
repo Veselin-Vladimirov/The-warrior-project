@@ -61,8 +61,15 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                              align: 'center', font: { size: 18 } }
                 },
                 x: {
-                    title: { display: true,
-                             align: 'center', font: { size: 18 } },
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                        tooltipFormat: 'll'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Date'
+                    },
                     ticks: { 
                         callback: function(value, index, values) {
                         return index % 4 === 0 ? value : '';
