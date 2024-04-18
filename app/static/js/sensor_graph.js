@@ -31,9 +31,14 @@ const addSensorCharts = async (location) => {
         errorMessageElement.textContent = error.message;
         document.getElementById('graph-div').appendChild(errorMessageElement);
     }
+
+    addSensorCharts(location);
+
+    setInterval(() => {
+    addSensorCharts(location);
+}, 10000);
 };
 
-// Създаване на графиката
 const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borderColor) => {
     const sensorChartElement = document.createElement('canvas');
     sensorChartElement.width = 400;
@@ -80,10 +85,3 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
     document.getElementById('graph-div').appendChild(sensorChartElement);
 };
 
-// Инициализация на графиките при зареждане на страницата
-addSensorCharts(location);
-
-// Настройка за автоматично обновление на графиките на всеки 60 секунди
-setInterval(() => {
-    addSensorCharts(location);
-}, 10000); // Обновяване на всеки 60 секунди
