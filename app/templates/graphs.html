@@ -13,6 +13,12 @@
             padding: 5rem;
         }
     </style>
+    <script>
+        function autoRefresh() {
+            window.location = window.location.href;
+        }
+        setInterval('autoRefresh()', 10000);
+    </script>
 </head>
 <body>
     <div id="graph-div"></div>
