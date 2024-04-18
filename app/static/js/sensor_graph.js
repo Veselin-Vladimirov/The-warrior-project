@@ -1,11 +1,10 @@
-const location = 'kiten-atliman'; // Заместете 'someLocation' с началната локация или използвайте метода за извличане от URL
-
 const addSensorCharts = async (location) => {
     try {
         const response = await fetch(`/locations/${location}`);
+
         if (!response.ok) {
-            const errorMsg = await response.json();
-            throw new Error(errorMsg.error);
+            const errorMsg = (await response.json()).error;
+            throw new Error(errorMsg);
         }
 
         const data = await response.json();
@@ -20,34 +19,30 @@ const addSensorCharts = async (location) => {
             ["Pressure", data.pressures, data.timestamps, 'Pressure (mb)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)']
         ];
 
-        // Очистване на старите графики преди да добавите нови
-        const graphDivElement = document.getElementById('graph-div');
-        graphDivElement.innerHTML = ''; // Премахвате старите canvas елементи
-
         for (const [title, data, timestamps, yLabel, backgroundColor, borderColor] of chartsData) {
             createDataChart(title, data, timestamps, yLabel, backgroundColor, borderColor);
         }
     } catch (error) {
-        console.error('Error loading sensor data:', error);
         const errorMessageElement = document.createElement('h3');
         errorMessageElement.textContent = error.message;
-        document.getElementById('graph-div').appendChild(errorMessageElement);
-    }
-};
 
-// Създаване на графиката
+        const graphDivElement = document.getElementById('graph-div');
+        graphDivElement.appendChild(errorMessageElement);
+    }
+}
+
 const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borderColor) => {
     const sensorChartElement = document.createElement('canvas');
-    sensorChartElement.width = 400;
-    sensorChartElement.height = 200;
-    const ctx = sensorChartElement.getContext('2d');
+    sensorChartElement.width = 100;
+    sensorChartElement.height = 50;
 
+    const ctx = sensorChartElement.getContext('2d');
+    
     new Chart(ctx, {
         type: 'line',
         data: {
             labels: timestamps,
             datasets: [{
-                label: title,
                 data: data,
                 backgroundColor: backgroundColor,
                 borderColor: borderColor,
@@ -55,39 +50,29 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
             }]
         },
         options: {
+            plugins: {
+                title: { display: true, text: title,
+                         align: 'center', font: { size: 20 } },
+                legend: { display: false }
+            },
             scales: {
                 y: {
-                    beginAtZero: true,
-                    title: {
-                        display: true,
-                        text: yLabel
-                    }
+                    title: { display: true, text: yLabel,
+                             align: 'center', font: { size: 18 } }
                 },
                 x: {
-                    title: {
-                        display: true,
-                        text: 'Timestamp'
-                    },
-                    ticks: {
+                    title: { display: true,
+                             align: 'center', font: { size: 18 } },
+                    ticks: { 
                         callback: function(value, index, values) {
-                            // Показва етикет само на всеки трети запис
-                            return index % 4 === 0 ? value : '';
+                            return index % 3 === 0 ? value : '';
                         },
-                        maxRotation: 0, // Предотвратява въртенето на етикетите, ако са дълги
-                        autoSkip: false // Изключва автоматичното пропускане на етикети от Chart.js
-                    }
+                        autoSkip: true, maxTicksLimit: 20, }
                 }
             }
         }
     });
 
-    document.getElementById('graph-div').appendChild(sensorChartElement);
-};
-
-// Инициализация на графиките при зареждане на страницата
-addSensorCharts(location);
-
-// Настройка за автоматично обновление на графиките на всеки 60 секунди
-setInterval(() => {
-    addSensorCharts(location);
-}, 10000); // Обновяване на всеки 60 секунди
+    const graphDivElement = document.getElementById('graph-div');
+    graphDivElement.appendChild(sensorChartElement);
+}
