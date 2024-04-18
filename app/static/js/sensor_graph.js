@@ -59,15 +59,10 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                     title: { display: true, text: yLabel, align: 'center', font: { size: 18 } }
                 },
                 x: {
-                    type: 'time',
-                    time: {
-                    unit: 'day'
-                    },
                     title: { display: true, text: 'Timestamp', align: 'center', font: { size: 18 } },
                     ticks: { 
-                        callback: function(value, index, values) {
-                            // Показва тикове само на всеки четвърти индекс
-                            return index % 4 === 0 ? value : '';
+                        callback: function(index) {
+                            return index % 4 === 0;
                         },
                         maxRotation: 0,
                         autoSkip: true,
