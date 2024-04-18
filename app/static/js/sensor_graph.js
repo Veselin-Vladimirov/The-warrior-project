@@ -31,6 +31,12 @@ const addSensorCharts = async (location) => {
     }
 }
 
+const updateCharts = (chartsData) => {
+    chartsData.forEach(([title, data, timestamps, yLabel, backgroundColor, borderColor]) => {
+        createDataChart(title, data, timestamps, yLabel, backgroundColor, borderColor);
+    });
+};
+
 const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borderColor) => {
     const sensorChartElement = document.createElement('canvas');
     sensorChartElement.width = 100;
@@ -42,33 +48,29 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
         type: 'line',
         data: {
             labels: timestamps,
-            datasets: [{
-                data: data,
-                backgroundColor: backgroundColor,
-                borderColor: borderColor,
-                borderWidth: 1
-            }]
+            datasets: [{ data, backgroundColor, borderColor, borderWidth: 1 }]
         },
         options: {
-            plugins: {
-                title: { display: true, text: title,
-                         align: 'center', font: { size: 20 } },
-                legend: { display: false }
-            },
-            scales: {
-                y: {
-                    title: { display: true, text: yLabel,
-                             align: 'center', font: { size: 18 } }
-                },
-                x: {
-                    title: { display: true, text: 'Timestamp',
-                             align: 'center', font: { size: 18 } },
-                    ticks: { autoSkip: true, maxTicksLimit: 20, }
-                }
-            }
+            plugins: { title: { display: true, text: title } },
+            scales: { y: { title: { display: true, text: yLabel } } }
         }
     });
 
     const graphDivElement = document.getElementById('graph-div');
+    graphDivElement.innerHTML = '';
     graphDivElement.appendChild(sensorChartElement);
 }
+
+const displayErrorMessage = (message) => {
+    const errorMessageElement = document.createElement('h3');
+    errorMessageElement.textContent = message;
+    const graphDivElement = document.getElementById('graph-div');
+    graphDivElement.innerHTML = '';
+    graphDivElement.appendChild(errorMessageElement);
+};
+
+setInterval(() => {
+    addSensorCharts(location);
+}, 10);
+
+addSensorCharts(location);
