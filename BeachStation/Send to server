@@ -7,7 +7,7 @@
 
 const char* ssid = "TP-Link_D9";
 const char* password = "12345678";
-const char* serverAddress = "http://192.168.168.38:5564/data";
+const char* serverAddress = "http://52.59.240.129/records";
 const char* apSSID = "ESP32_AP";
 const char* apPassword = "password";
 const int apChannel = 1;
@@ -21,6 +21,7 @@ Adafruit_BME280 bme;
 long previousMillis = 0;
 const long interval = 1000;
 float depth, waterTemperature, clearness;
+String location = "kiten-atliman";
 
 void setup() {
     // Set ESP32 Dev Kit as an Access Point
@@ -36,11 +37,13 @@ void setup() {
   Serial.println("Server started.");
 
   Serial.begin(115200);
+  /*
   Wire.begin(BME_SDA, BME_SCL);
   if (!bme.begin(0x76, &Wire)) {
     Serial.println("Could not find a valid BME280 sensor, check wiring!");
     while (1);
   }
+  */
   Serial.println("Connecting to WiFi...");
   WiFi.begin(ssid, password);
   
@@ -99,9 +102,9 @@ void loop() {
     float windSpeed = calculateWindSpeed(voltage);
 
     // Read BME280 sensor
-    float airTemperature = bme.readTemperature();
-    float pressure = bme.readPressure() / 100.0F; // hPa conversion
-    float humidity = bme.readHumidity();
+    float airTemperature = 24; //bme.readTemperature();
+    float pressure = 954; // bme.readPressure() / 100.0F; // hPa conversion
+    float humidity = 67; // bme.readHumidity();
     Serial.println("temp: ");
     Serial.print(airTemperature);
     Serial.println("press: ");
@@ -112,6 +115,7 @@ void loop() {
     Serial.print(windSpeed);
     // Create JSON payload
     StaticJsonDocument<500> jsonDocument;
+    jsonDocument["location"] = location;
     jsonDocument["depth"] = depth;
     jsonDocument["air_temperature"] = airTemperature;
     jsonDocument["water_temperature"] = waterTemperature;
@@ -140,7 +144,7 @@ void loop() {
     http.end();
   }
 
-  delay(5000); // Adjust delay based on your requirements
+  delay(10000); // Adjust delay based on your requirements
 }
 
 float calculateWindSpeed(float voltage) {
