@@ -33,16 +33,16 @@ const addSensorCharts = async (location) => {
 
 const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borderColor) => {
     const sensorChartElement = document.createElement('canvas');
-    sensorChartElement.width = 100;
-    sensorChartElement.height = 50;
-
+    sensorChartElement.width = 400;
+    sensorChartElement.height = 200;
     const ctx = sensorChartElement.getContext('2d');
     
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: timestamps,
+            labels: timestamps.map(timestamp => new Date(timestamp).toLocaleDateString('en-US')),
             datasets: [{
+                label: title,
                 data: data,
                 backgroundColor: backgroundColor,
                 borderColor: borderColor,
@@ -50,35 +50,45 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
             }]
         },
         options: {
-            plugins: {
-                title: { display: true, text: title,
-                         align: 'center', font: { size: 20 } },
-                legend: { display: false }
-            },
             scales: {
                 y: {
-                    title: { display: true, text: yLabel,
-                             align: 'center', font: { size: 18 } }
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: yLabel
+                    }
                 },
                 x: {
-                    type: 'time',
-                    time: {
-                        unit: 'day',
-                        tooltipFormat: 'll'
-                    },
                     title: {
                         display: true,
                         text: 'Date'
                     },
-                    ticks: { 
+                    ticks: {
                         callback: function(value, index, values) {
-                        return index % 4 === 0 ? value : '';
+                            // Тук проверяваме дали трябва да показваме маркера
+                            return index % 4 === 0 ? new Date(value).toLocaleDateString('en-US') : '';
                         },
-                        autoSkip: false, maxTicksLimit: 20, maxRotation: 0,}
+                        maxRotation: 0,
+                        autoSkip: false,
+                        maxTicksLimit: 20
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            return new Date(tooltipItems[0].label).toLocaleString(); // Форматира датата в tooltip
+                        }
+                    }
                 }
             }
         }
     });
+
+    document.getElementById('graph-div').appendChild(sensorChartElement);
+};
+
 
     const graphDivElement = document.getElementById('graph-div');
     graphDivElement.appendChild(sensorChartElement);
