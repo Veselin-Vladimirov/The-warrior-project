@@ -59,6 +59,10 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                     title: { display: true, text: yLabel, align: 'center', font: { size: 18 } }
                 },
                 x: {
+                    type: 'time',
+                    time: {
+                    unit: 'day'
+                    },
                     title: { display: true, text: 'Timestamp', align: 'center', font: { size: 18 } },
                     ticks: { 
                         callback: function(value, index, values) {
