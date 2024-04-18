@@ -1,3 +1,5 @@
+const location = 'kiten-atliman'; // Заместете 'someLocation' с началната локация или използвайте метода за извличане от URL
+
 const addSensorCharts = async (location) => {
     try {
         const response = await fetch(`/locations/${location}`);
@@ -18,8 +20,9 @@ const addSensorCharts = async (location) => {
             ["Pressure", data.pressures, data.timestamps, 'Pressure (mb)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)']
         ];
 
+        // Очистване на старите графики преди да добавите нови
         const graphDivElement = document.getElementById('graph-div');
-        graphDivElement.innerHTML = '';
+        graphDivElement.innerHTML = ''; // Премахвате старите canvas елементи
 
         for (const [title, data, timestamps, yLabel, backgroundColor, borderColor] of chartsData) {
             createDataChart(title, data, timestamps, yLabel, backgroundColor, borderColor);
@@ -32,6 +35,7 @@ const addSensorCharts = async (location) => {
     }
 };
 
+// Създаване на графиката
 const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borderColor) => {
     const sensorChartElement = document.createElement('canvas');
     sensorChartElement.width = 400;
@@ -41,7 +45,7 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: timestamps.map(timestamp => new Date(timestamp).toLocaleDateString('en-US')),
+            labels: timestamps,
             datasets: [{
                 label: title,
                 data: data,
@@ -60,34 +64,30 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                     }
                 },
                 x: {
-                    type: 'time',
-                    time: {
-                        unit: 'day',
-                        tooltipFormat: 'll'
-                    },
                     title: {
                         display: true,
-                        text: 'Date'
+                        text: 'Timestamp'
                     },
                     ticks: {
                         callback: function(value, index, values) {
+                            // Показва етикет само на всеки трети запис
                             return index % 4 === 0 ? value : '';
                         },
-                        maxRotation: 0,
-                        autoSkip: false
+                        maxRotation: 0, // Предотвратява въртенето на етикетите, ако са дълги
+                        autoSkip: false // Изключва автоматичното пропускане на етикети от Chart.js
                     }
                 }
-            },
+            }
         }
     });
 
     document.getElementById('graph-div').appendChild(sensorChartElement);
 };
 
-
+// Инициализация на графиките при зареждане на страницата
 addSensorCharts(location);
 
+// Настройка за автоматично обновление на графиките на всеки 60 секунди
 setInterval(() => {
     addSensorCharts(location);
-}, 10000);
-
+}, 10000); // Обновяване на всеки 60 секунди
