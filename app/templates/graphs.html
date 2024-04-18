@@ -15,7 +15,13 @@
     </style>
 </head>
 <body>
-    <h2>Sensor Data Line Graph</h2>
-    <canvas id="sensorChart" width="800" height="400"></canvas>
+    <div id="graph-div"></div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const location = "{{ location }}";
+            addSensorCharts(location);
+        });
+    </script>
 </body>
 </html>
