@@ -1,10 +1,9 @@
 const addSensorCharts = async (location) => {
     try {
         const response = await fetch(`/locations/${location}`);
-
         if (!response.ok) {
-            const errorMsg = (await response.json()).error;
-            throw new Error(errorMsg);
+            const errorMsg = await response.json();
+            throw new Error(errorMsg.error);
         }
 
         const data = await response.json();
@@ -19,58 +18,66 @@ const addSensorCharts = async (location) => {
             ["Pressure", data.pressures, data.timestamps, 'Pressure (mb)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)']
         ];
 
+        // Очистване на старите графики преди да добавите нови
+        const graphDivElement = document.getElementById('graph-div');
+        graphDivElement.innerHTML = ''; // Премахвате старите canvas елементи
+
         for (const [title, data, timestamps, yLabel, backgroundColor, borderColor] of chartsData) {
             createDataChart(title, data, timestamps, yLabel, backgroundColor, borderColor);
         }
     } catch (error) {
+        console.error('Error loading sensor data:', error);
         const errorMessageElement = document.createElement('h3');
         errorMessageElement.textContent = error.message;
-
-        const graphDivElement = document.getElementById('graph-div');
-        graphDivElement.appendChild(errorMessageElement);
+        document.getElementById('graph-div').appendChild(errorMessageElement);
     }
-}
-
-const updateCharts = (chartsData) => {
-    chartsData.forEach(([title, data, timestamps, yLabel, backgroundColor, borderColor]) => {
-        createDataChart(title, data, timestamps, yLabel, backgroundColor, borderColor);
-    });
 };
 
+// Създаване на графиката
 const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borderColor) => {
     const sensorChartElement = document.createElement('canvas');
-    sensorChartElement.width = 100;
-    sensorChartElement.height = 50;
-
+    sensorChartElement.width = 400;
+    sensorChartElement.height = 200;
     const ctx = sensorChartElement.getContext('2d');
-    
+
     new Chart(ctx, {
         type: 'line',
         data: {
             labels: timestamps,
-            datasets: [{ data, backgroundColor, borderColor, borderWidth: 1 }]
+            datasets: [{
+                label: title,
+                data: data,
+                backgroundColor: backgroundColor,
+                borderColor: borderColor,
+                borderWidth: 1
+            }]
         },
         options: {
-            plugins: { title: { display: true, text: title } },
-            scales: { y: { title: { display: true, text: yLabel } } }
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    title: {
+                        display: true,
+                        text: yLabel
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        text: 'Timestamp'
+                    }
+                }
+            }
         }
     });
 
-    const graphDivElement = document.getElementById('graph-div');
-    graphDivElement.innerHTML = '';
-    graphDivElement.appendChild(sensorChartElement);
-}
-
-const displayErrorMessage = (message) => {
-    const errorMessageElement = document.createElement('h3');
-    errorMessageElement.textContent = message;
-    const graphDivElement = document.getElementById('graph-div');
-    graphDivElement.innerHTML = '';
-    graphDivElement.appendChild(errorMessageElement);
+    document.getElementById('graph-div').appendChild(sensorChartElement);
 };
 
+// Инициализация на графиките при зареждане на страницата
+addSensorCharts(location);
+
+// Настройка за автоматично обновление на графиките на всеки 60 секунди
 setInterval(() => {
     addSensorCharts(location);
-}, 10);
-
-addSensorCharts(location);
+}, 10000); // Обновяване на всеки 60 секунди
