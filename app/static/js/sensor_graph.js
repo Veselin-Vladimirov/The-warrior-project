@@ -18,9 +18,8 @@ const addSensorCharts = async (location) => {
             ["Pressure", data.pressures, data.timestamps, 'Pressure (mb)', 'rgba(54, 162, 235, 0.2)', 'rgba(54, 162, 235, 1)']
         ];
 
-        // Очистване на старите графики преди да добавите нови
         const graphDivElement = document.getElementById('graph-div');
-        graphDivElement.innerHTML = ''; // Премахвате старите canvas елементи
+        graphDivElement.innerHTML = '';
 
         for (const [title, data, timestamps, yLabel, backgroundColor, borderColor] of chartsData) {
             createDataChart(title, data, timestamps, yLabel, backgroundColor, borderColor);
@@ -31,10 +30,6 @@ const addSensorCharts = async (location) => {
         errorMessageElement.textContent = error.message;
         document.getElementById('graph-div').appendChild(errorMessageElement);
     }
-
-    setInterval(() => {
-    addSensorCharts(location);
-}, 10000);
 };
 
 const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borderColor) => {
@@ -102,4 +97,7 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
 
 addSensorCharts(location);
 
+setInterval(() => {
+    addSensorCharts(location);
+}, 10000);
 
