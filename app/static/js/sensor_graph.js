@@ -64,9 +64,6 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                         maxRotation: 0,
                         autoSkip: true,
                         maxTicksLimit: 20
-                        callback: function(index) {
-                            return index % 4 === 0;
-                        },
                     }
                 }
             }
