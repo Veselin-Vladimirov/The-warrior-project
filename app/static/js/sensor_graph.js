@@ -32,8 +32,6 @@ const addSensorCharts = async (location) => {
         document.getElementById('graph-div').appendChild(errorMessageElement);
     }
 
-    addSensorCharts(location);
-
     setInterval(() => {
     addSensorCharts(location);
 }, 10000);
@@ -48,7 +46,7 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
     new Chart(ctx, {
         type: 'line',
         data: {
-            labels: timestamps,
+            labels: timestamps.map(timestamp => new Date(timestamp).toLocaleDateString('en-US')),
             datasets: [{
                 label: title,
                 data: data,
@@ -67,15 +65,31 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                     }
                 },
                 x: {
+                    type: 'time', // Указва, че x-осът е времева ос
+                    time: {
+                        unit: 'day', // Можете да настройвате това според нуждите
+                        tooltipFormat: 'll' // Формат на датите при hover
+                    },
                     title: {
                         display: true,
+                        text: 'Date'
                     },
                     ticks: {
                         callback: function(value, index, values) {
+                            // Показва етикет само на всеки четвърти запис
                             return index % 4 === 0 ? value : '';
                         },
                         maxRotation: 0,
                         autoSkip: false
+                    }
+                }
+            },
+            plugins: {
+                tooltip: {
+                    callbacks: {
+                        title: function(tooltipItems) {
+                            return new Date(tooltipItems[0].label).toLocaleString(); // Форматира датата в tooltip
+                        }
                     }
                 }
             }
@@ -84,4 +98,8 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
 
     document.getElementById('graph-div').appendChild(sensorChartElement);
 };
+
+
+addSensorCharts(location);
+
 
