@@ -61,12 +61,12 @@ const createDataChart = (title, data, timestamps, yLabel, backgroundColor, borde
                 x: {
                     title: { display: true, text: 'Timestamp', align: 'center', font: { size: 18 } },
                     ticks: { 
-                        callback: function(index) {
-                            return index % 4 === 0;
-                        },
                         maxRotation: 0,
                         autoSkip: true,
                         maxTicksLimit: 20
+                        callback: function(index) {
+                            return index % 4 === 0;
+                        },
                     }
                 }
             }
